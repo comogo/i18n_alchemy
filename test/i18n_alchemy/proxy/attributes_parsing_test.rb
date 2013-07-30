@@ -13,16 +13,6 @@ class ProxyAttributesParsingTest < I18n::Alchemy::ProxyTestCase
     assert_equal "28/02/2011", @localized.released_at
   end
 
-  def test_initializes_proxy_with_attributes_and_skips_mass_assignment_security_protection_when_without_protection_is_used
-    @localized = @product.localized(attributes_hash, :without_protection => true)
-    if support_assign_attributes_without_protection?
-      assert_equal 'My Precious!', @localized.my_precious
-    else
-      assert_nil @localized.my_precious
-    end
-    assert_equal 1, @localized.quantity
-  end
-
   def test_assign_attributes
     @localized.assign_attributes(:price => '1,99')
     assert_equal "1,99", @localized.price
@@ -34,14 +24,8 @@ class ProxyAttributesParsingTest < I18n::Alchemy::ProxyTestCase
     end
   end
 
-  def test_new_with_attr_protected_attributes
+  def test_assign_attributes_skips_mass_assignment_security_protection
     @localized.assign_attributes(attributes_hash)
-    assert_nil @localized.my_precious
-    assert_equal 1, @localized.quantity
-  end
-
-  def test_assign_attributes_skips_mass_assignment_security_protection_when_without_protection_is_used
-    @localized.assign_attributes(attributes_hash, :without_protection => true)
     if support_assign_attributes_without_protection?
       assert_equal 'My Precious!', @localized.my_precious
     else
@@ -76,6 +60,18 @@ class ProxyAttributesParsingTest < I18n::Alchemy::ProxyTestCase
   def test_update_attributes_does_not_change_given_attributes_hash
     assert_attributes_hash_is_not_changed(attributes = attributes_hash) do
       @localized.update_attributes(attributes)
+    end
+  end
+
+  def test_update
+    @localized.update(:price => '2,88')
+    assert_equal '2,88', @localized.price
+    assert_equal 2.88, @product.reload.price
+  end
+
+  def test_update_does_not_change_given_attributes_hash
+    assert_attributes_hash_is_not_changed(attributes = attributes_hash) do
+      @localized.update(attributes)
     end
   end
 

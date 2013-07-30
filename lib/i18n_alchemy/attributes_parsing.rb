@@ -7,20 +7,24 @@ module I18n
 
       # This method is added to the proxy even thought it does not exist in
       # Rails 3.0 (only >= 3.1).
-      def assign_attributes(attributes, *args)
+      def assign_attributes(attributes)
         if @target.respond_to?(:assign_attributes)
-          @target.assign_attributes(parse_attributes(attributes), *args)
+          @target.assign_attributes(parse_attributes(attributes))
         else
           self.attributes = attributes
         end
       end
 
-      def update_attributes(attributes, *args)
-        @target.update_attributes(parse_attributes(attributes), *args)
+      def update(attributes)
+        @target.update(parse_attributes(attributes))
       end
 
-      def update_attributes!(attributes, *args)
-        @target.update_attributes!(parse_attributes(attributes), *args)
+      def update_attributes(attributes)
+        @target.update_attributes(parse_attributes(attributes))
+      end
+
+      def update_attributes!(attributes)
+        @target.update_attributes!(parse_attributes(attributes))
       end
 
       def update_attribute(attribute, value)

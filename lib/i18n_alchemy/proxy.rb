@@ -1,7 +1,7 @@
 module I18n
   module Alchemy
     # Depend on AS::BasicObject which has a "blank slate" - no methods.
-    class Proxy < ActiveSupport::BasicObject
+    class Proxy < ActiveSupport::ProxyObject
       include AttributesParsing
 
       # TODO: cannot assume _id is always a foreign key.
@@ -18,7 +18,7 @@ module I18n
           build_associations
         end
 
-        assign_attributes(attributes, *args) if attributes
+        assign_attributes(attributes) if attributes
       end
 
       # Override to_param to always return the +proxy.to_param+. This allow us
